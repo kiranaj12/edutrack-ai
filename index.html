@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTrack AI - Student Management System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: white;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .ai-status {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .settings-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+            padding: 0.5rem;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: #6b7280;
+        }
+        
+        .tab-btn:hover {
+            background: #f3f4f6;
+        }
+        
+        .tab-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+        
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .grid {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+        
+        @media (min-width: 768px) {
+            .md-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            .md-grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+            .md-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+        }
+        
+        @media (min-width: 1024px) {
+            .lg-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            .lg-grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        }
+        
+        /* Profile Styles */
+        .profile-avatar {
+            width: 6rem;
+            height: 6rem;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+        
+        .profile-info {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .profile-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+        
+        .profile-id {
+            color: #6b7280;
+        }
+        
+        .profile-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stat-label {
+            color: #6b7280;
+        }
+        
+        .stat-value {
+            font-weight: 500;
+        }
+        
+        .cgpa-value {
+            font-weight: 700;
+            color: #10b981;
+            font-size: 1.125rem;
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 4rem;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+        
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #d97706;
+        }
+        
+        .btn-full {
+            width: 100%;
+        }
+        
+        /* Attendance Styles */
+        .attendance-overview {
+            text-align: center;
+        }
+        
+        .attendance-percentage {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 0.75rem;
+            background: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #10b981;
+            transition: width 1s ease-in-out;
+        }
+        
+        .attendance-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-box {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-number.present {
+            color: #3b82f6;
+        }
+        
+        .stat-number.absent {
+            color: #ef4444;
+        }
+        
+        .stat-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        /* AI Insights */
+        .ai-insights {
+            background: linear-gradient(45deg, #8b5cf6, #ec4899);
+            color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .ai-insights h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        
+        .ai-insights ul {
+            list-style: none;
+            font-size: 0.875rem;
+        }
+        
+        .ai-insights li {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Attendance Controls */
+        .attendance-controls {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .attendance-controls .btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+        }
+        
+        /* Subject Attendance */
+        .subject-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .subject-info h4 {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+        
+        .subject-info p {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .subject-stats {
+            text-align: right;
+        }
+        
+        .subject-percentage {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .subject-percentage.good {
+            color: #10b981;
+        }
+        
+        .subject-percentage.warning {
+            color: #f59e0b;
+        }
+        
+        .subject-percentage.danger {
+            color: #ef4444;
+        }
+        
+        .mini-progress {
+            width: 5rem;
+            height: 0.5rem;
+            background: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        
+        .mini-progress-fill {
+            height: 100%;
+            background: #3b82f6;
+        }
+        
+        /* Table Styles */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th,
+        .table td {
+            text-align: left;
+            padding: 0.75rem 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .table th {
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .table tr:hover {
+            background: #f9fafb;
+        }
+        
+        /* Status Badge */
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-present {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-absent {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .status-late {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        /* Grade Styles */
+        .cgpa-display {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cgpa-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .cgpa-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .grade-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .grade-a-plus {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .grade-a {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .grade-b-plus {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .grade-b {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        /* Analytics Styles */
+        .prediction-card {
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        
+        .prediction-item {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .prediction-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .prediction-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .prediction-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .prediction-description {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        
+        /* Recommendations */
+        .recommendation-item {
+            border-left: 4px solid;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .recommendation-item.focus {
+            border-color: #3b82f6;
+        }
+        
+        .recommendation-item.strength {
+            border-color: #10b981;
+        }
+        
+        .recommendation-item.time {
+            border-color: #f59e0b;
+        }
+        
+        .recommendation-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+        
+        .recommendation-text {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        /* Goal Tracker */
+        .goal-item {
+            margin-bottom: 1rem;
+        }
+        
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .goal-label {
+            color: #374151;
+        }
+        
+        .goal-percentage {
+            font-weight: 600;
+            color: #3b82f6;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: #10b981;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.error {
+            background: #ef4444;
+        }
+        
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+        
+        .mb-6 {
+            margin-bottom: 1.5rem;
+        }
+        
+        .mt-4 {
+            margin-top: 1rem;
+        }
+        
+        .mt-6 {
+            margin-top: 1.5rem;
+        }
+        
+        .space-y-4 > * + * {
+            margin-top: 1rem;
+        }
+        
+        .space-y-6 > * + * {
+            margin-top: 1.5rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .tab-buttons {
+                flex-direction: column;
+            }
+            
+            .attendance-controls {
+                flex-direction: column;
+            }
+            
+            .subject-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🎓</div>
+                    <h1>EduTrack AI</h1>
+                </div>
+                <div class="header-actions">
+                    <div class="ai-status">🤖 AI Assistant Active</div>
+                    <button class="settings-btn">Settings</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="showTab('profile')" id="tab-profile">
+                    👤 Student Profile
+                </button>
+                <button class="tab-btn" onclick="showTab('attendance')" id="tab-attendance">
+                    📅 Attendance
+                </button>
+                <button class="tab-btn" onclick="showTab('grades')" id="tab-grades">
+                    📊 Grades & CGPA
+                </button>
+                <button class="tab-btn" onclick="showTab('analytics')" id="tab-analytics">
+                    🧠 AI Analytics
+                </button>
+            </div>
+        </div>
+
+        <!-- Student Profile Tab -->
+        <div id="profile-tab" class="tab-content">
+            <div class="grid md-grid-cols-3">
+                <!-- Profile Card -->
+                <div>
+                    <div class="card">
+                        <div class="profile-info">
+                            <div class="profile-avatar" id="profile-avatar">JS</div>
+                            <h2 class="profile-name" id="student-name">John Smith</h2>
+                            <p class="profile-id" id="student-id">ID: STU2024001</p>
+                        </div>
+                        
+                        <div class="profile-stats">
+                            <div class="stat-row">
+                                <span class="stat-label">Department:</span>
+                                <span class="stat-value" id="department">Computer Science</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Year:</span>
+                                <span class="stat-value" id="year">3rd Year</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Current CGPA:</span>
+                                <span class="cgpa-value" id="current-cgpa">8.7</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-full mt-6" onclick="editProfile()">
+                            Edit Profile
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Details Form -->
+                <div style="grid-column: span 2;">
+                    <div class="card">
+                        <h3 class="mb-6" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">Personal Information</h3>
+                        
+                        <div class="grid md-grid-cols-2">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" id="full-name" value="John Smith" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" id="email" value="john.smith@university.edu" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" id="phone" value="+1 (555) 123-4567" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" id="dob" value="2002-05-15" class="form-input">
+                            </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label class="form-label">Address</label>
+                                <textarea id="address" class="form-input form-textarea">123 University Ave, College Town, ST 12345</textarea>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-success mt-6" onclick="saveProfile()">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Tab -->
+        <div id="attendance-tab" class="tab-content hidden">
+            <div class="grid lg-grid-cols-3">
+                <!-- Attendance Stats -->
+                <div class="space-y-6">
+                    <div class="card">
+                        <h3 class="mb-4" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">Attendance Overview</h3>
+                        <div class="attendance-overview">
+                            <div class="attendance-percentage" id="overall-attendance">87%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="attendance-progress" style="width: 87%"></div>
+                            </div>
+                            <div class="attendance-stats">
+                                <div class="stat-box">
+                                    <div class="stat-number present" id="present-days">156</div>
+                                    <div class="stat-description">Present</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-number absent" id="absent-days">23</div>
+                                    <div class="stat-description">Absent</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Attendance Insights -->
+                    <div class="ai-insights">
+                        <h3>🤖 AI Insights</h3>
+                        <ul>
+                            <li>• Your attendance is trending upward this month!</li>
+                            <li>• Monday mornings show lower attendance - consider setting reminders</li>
+                            <li>• You're 3% above class average</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Attendance Calendar & Records -->
+                <div style="grid-column: span 2;" class="space-y-6">
+                    <!-- Quick Mark Attendance -->
+                    <div class="card">
+                        <h3 class="mb-4" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">Mark Today's Attendance</h3>
+                        <div class="attendance-controls">
+                            <button class="btn btn-success" onclick="markAttendance('present')">
+                                ✓ Present
+                            </button>
+                            <button class="btn btn-danger" onclick="markAttendance('absent')">
+                                ✗ Absent
+                            </button>
+                            <button class="btn btn-warning" onclick="markAttendance('late')">
+                                ⏰ Late
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Subject-wise Attendance -->
+                    <div class="card">
+                        <h3 class="mb-4" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">Subject-wise Attendance</h3>
+                        <div id="subject-attendance">
+                            <!-- Subject attendance will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Recent Attendance -->
+                    <div class="card">
+                        <h3 class="mb-4" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">Recent Attendance</h3>
+                        <div style="overflow-x: auto;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Subject</th>
+                                        <th>Status</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-attendance">
+                                    <!-- Recent attendance records will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grades & CGPA Tab -->
+        <div id="grades-tab" class="tab-content hidden">
+            <div class="grid lg-grid-cols-3">
+                <!-- CGPA Calculator -->
+                <div class="space-y-6">
+                    <div class="card">
+                        <h3 class="mb-4" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">CGPA Calculator</h3>
+                        <div class="cgpa-display">
+                            <div class="cgpa-number" id="calculated-cgpa">8.7</div>
+                            <div class="cgpa-label">Current CGPA</div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="stat-row">
+                                <span class="stat-label">Total Credits:</span>
+                                <span class="stat-value" id="total-credits">120</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Grade Points:</span>
+                                <span class="stat-value" id="total-grade-points">1044</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grade Distribution -->
+                    <div class="card">
+                        <h3 class="mb-4" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">Grade Distribution</h3>
+                        <div id="grade-chart" style="height: 200px; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border-radius: 0.5rem;">
+                            <div class="text-center" style="color: #6b7280;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                                <p>Grade Distribution Chart</p>
+                                <p style="font-size: 0.875rem;">A+: 40%, A: 30%, B+: 20%, B: 10%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semester Grades -->
+                <div style="grid-column: span 2;" class="space-y-6">
+                    <!-- Add New Grade -->
+                    <div class="card">
+                        <h3 class="mb-4" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">Add New Grade</h3>
+                        <div class="grid md-grid-cols-4">
+                            <input type="text" id="subject-name" placeholder="Subject Name" class="form-input">
+                            <input type="number" id="credits" placeholder="Credits" min="1" max="6" class="form-input">
+                            <select id="grade" class="form-input">
+                                <option value="">Select Grade</option>
+                                <option value="10">A+ (10)</option>
+                                <option value="9">A (9)</option>
+                                <option value="8">B+ (8)</option>
+                                <option value="7">B (7)</option>
+                                <option value="6">C+ (6)</option>
+                                <option value="5">C (5)</option>
+                                <option value="4">D (4)</option>
+                                <option value="0">F (0)</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="addGrade()">
+                                Add Grade
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Semester-wise Performance -->
+                    <div class="card">
+                        <h3 class="mb-4" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">Semester Performance</h3>
+                        <div id="semester-performance">
+                            <!-- Semester data will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Subject Grades Table -->
+                    <div class="card">
+                        <h3 class="mb-4" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">All Subjects</h3>
+                        <div style="overflow-x: auto;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Credits</th>
+                                        <th>Grade</th>
+                                        <th>Points</th>
+                                        <th>Semester</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="grades-table">
+                                    <!-- Grades will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Analytics Tab -->
+        <div id="analytics-tab" class="tab-content hidden">
+            <div class="grid lg-grid-cols-2">
+                <!-- Performance Trends -->
+                <div class="card">
+                    <h3 class="mb-4" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">📈 Performance Trends</h3>
+                    <div id="performance-chart" style="height: 250px; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border-radius: 0.5rem;">
+                        <div class="text-center" style="color: #6b7280;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+                            <p>Performance Trend Chart</p>
+                            <p style="font-size: 0.875rem;">CGPA & Attendance Over Time</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Predictions -->
+                <div class="prediction-card">
+                    <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;">🔮 AI Predictions</h3>
+                    <div class="prediction-item">
+                        <h4 class="prediction-title">Expected Final CGPA</h4>
+                        <div class="prediction-value">8.9</div>
+                        <p class="prediction-description">Based on current trends</p>
+                    </div>
+                    <div class="prediction-item">
+                        <h4 class="prediction-title">Attendance Risk</h4>
+                        <div class="prediction-value" style="color: #86efac;">Low Risk</div>
+                        <p class="prediction-description">Maintain current pattern</p>
+                    </div>
+                </div>
+
+                <!-- Study Recommendations -->
+                <div class="card">
+                    <h3 class="mb-4" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">💡 AI Study Recommendations</h3>
+                    <div>
+                        <div class="recommendation-item focus">
+                            <h4 class="recommendation-title">Focus Areas</h4>
+                            <p class="recommendation-text">Data Structures needs more attention - consider extra practice sessions</p>
+                        </div>
+                        <div class="recommendation-item strength">
+                            <h4 class="recommendation-title">Strengths</h4>
+                            <p class="recommendation-text">Excellent performance in Web Development - maintain momentum</p>
+                        </div>
+                        <div class="recommendation-item time">
+                            <h4 class="recommendation-title">Time Management</h4>
+                            <p class="recommendation-text">Optimal study time appears to be 2-4 PM based on performance data</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Goal Tracker -->
+                <div class="card">
+                    <h3 class="mb-4" style="font-size: 1.125rem; font-weight: 700; color: #1f2937;">🎯 Goal Tracker</h3>
+                    <div>
+                        <div class="goal-item">
+                            <div class="goal-header">
+                                <span class="goal-label">Target CGPA: 9.0</span>
+                                <span class="goal-percentage">96.7%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 96.7%; background: #3b82f6;"></div>
+                            </div>
+                        </div>
+                        <div class="goal-item">
+                            <div class="goal-header">
+                                <span class="goal-label">Attendance Goal: 90%</span>
+                                <span class="goal-percentage" style="color: #10b981;">96.7%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 96.7%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <span id="toast-message">Success!</span>
+    </div>
+
+    <script>
+        // Sample data
+        let studentData = {
+            profile: {
+                name: "John Smith",
+                id: "STU2024001",
+                department: "Computer Science",
+                year: "3rd Year",
+                email: "john.smith@university.edu",
+                phone: "+1 (555) 123-4567",
+                dob: "2002-05-15",
+                address: "123 University Ave, College Town, ST 12345"
+            },
+            attendance: {
+                overall: 87,
+                present: 156,
+                absent: 23,
+                subjects: [
+                    { name: "Data Structures", attendance: 92, total: 25, present: 23 },
+                    { name: "Web Development", attendance: 88, total: 24, present: 21 },
+                    { name: "Database Systems", attendance: 85, total: 20, present: 17 },
+                    { name: "Machine Learning", attendance: 90, total: 22, present: 20 }
+                ],
+                recent: [
+                    { date: "2024-01-15", subject: "Data Structures", status: "Present", time: "09:00 AM" },
+                    { date: "2024-01-14", subject: "Web Development", status: "Present", time: "11:00 AM" },
+                    { date: "2024-01-13", subject: "Database Systems", status: "Late", time: "02:15 PM" },
+                    { date: "2024-01-12", subject: "Machine Learning", status: "Present", time: "10:00 AM" }
+                ]
+            },
+            grades: [
+                { subject: "Data Structures", credits: 4, grade: 8, semester: "Fall 2023" },
+                { subject: "Web Development", credits: 3, grade: 9, semester: "Fall 2023" },
+                { subject: "Database Systems", credits: 4, grade: 7, semester: "Spring 2023" },
+                { subject: "Machine Learning", credits: 3, grade: 9, semester: "Fall 2023" },
+                { subject: "Computer Networks", credits: 4, grade: 8, semester: "Spring 2023" },
+                { subject: "Software Engineering", credits: 3, grade: 9, semester: "Spring 2023" }
+            ]
+        };
+
+        // Load data from localStorage if available
+        function loadData() {
+            const saved = localStorage.getItem('edutrack-data');
+            if (saved) {
+                studentData = JSON.parse(saved);
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('edutrack-data', JSON.stringify(studentData));
+        }
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            
+            // Add active class to selected tab button
+            document.getElementById('tab-' + tabName).classList.add('active');
+
+            // Initialize tab-specific content
+            if (tabName === 'attendance') {
+                loadAttendanceData();
+            } else if (tabName === 'grades') {
+                loadGradesData();
+            } else if (tabName === 'analytics') {
+                loadAnalyticsData();
+            }
+        }
+
+        // Profile functions
+        function editProfile() {
+            showToast("Profile editing enabled!");
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('full-name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const dob = document.getElementById('dob').value;
+            const address = document.getElementById('address').value;
+            
+            // Update profile display
+            document.getElementById('student-name').textContent = name;
+            
+            // Update student data
+            studentData.profile.name = name;
+            studentData.profile.email = email;
+            studentData.profile.phone = phone;
+            studentData.profile.dob = dob;
+            studentData.profile.address = address;
+            
+            // Update avatar
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+            document.getElementById('profile-avatar').textContent = initials;
+            
+            saveData();
+            showToast("Profile updated successfully!");
+        }
+
+        // Attendance functions
+        function markAttendance(status) {
+            const today = new Date().toISOString().split('T')[0];
+            const statusText = status.charAt(0).toUpperCase() + status.slice(1);
+            
+            // Add to recent attendance
+            studentData.attendance.recent.unshift({
+                date: today,
+                subject: "Current Class",
+                status: statusText,
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            });
+            
+            // Update attendance stats
+            if (status === 'present') {
+                studentData.attendance.present++;
+            } else {
+                studentData.attendance.absent++;
+            }
+            
+            // Recalculate overall percentage
+            const total = studentData.attendance.present + studentData.attendance.absent;
+            studentData.attendance.overall = Math.round((studentData.attendance.present / total) * 100);
+            
+            saveData();
+            loadAttendanceData();
+            showToast(`Attendance marked as ${statusText}!`);
+        }
+
+        function loadAttendanceData() {
+            // Update overall stats
+            document.getElementById('overall-attendance').textContent = studentData.attendance.overall + '%';
+            document.getElementById('present-days').textContent = studentData.attendance.present;
+            document.getElementById('absent-days').textContent = studentData.attendance.absent;
+            
+            // Update attendance bar
+            document.getElementById('attendance-progress').style.width = studentData.attendance.overall + '%';
+            
+            // Load subject-wise attendance
+            const subjectContainer = document.getElementById('subject-attendance');
+            subjectContainer.innerHTML = '';
+            
+            studentData.attendance.subjects.forEach(subject => {
+                const subjectDiv = document.createElement('div');
+                subjectDiv.className = 'subject-item';
+                
+                const percentageClass = subject.attendance >= 85 ? 'good' : 
+                                      subject.attendance >= 75 ? 'warning' : 'danger';
+                
+                subjectDiv.innerHTML = `
+                    <div class="subject-info">
+                        <h4>${subject.name}</h4>
+                        <p>${subject.present}/${subject.total} classes</p>
+                    </div>
+                    <div class="subject-stats">
+                        <div class="subject-percentage ${percentageClass}">${subject.attendance}%</div>
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" style="width: ${subject.attendance}%"></div>
+                        </div>
+                    </div>
+                `;
+                subjectContainer.appendChild(subjectDiv);
+            });
+            
+            // Load recent attendance
+            const recentContainer = document.getElementById('recent-attendance');
+            recentContainer.innerHTML = '';
+            
+            studentData.attendance.recent.slice(0, 10).forEach(record => {
+                const row = document.createElement('tr');
+                
+                const statusClass = record.status === 'Present' ? 'status-present' :
+                                  record.status === 'Late' ? 'status-late' : 'status-absent';
+                
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.subject}</td>
+                    <td><span class="status-badge ${statusClass}">${record.status}</span></td>
+                    <td>${record.time}</td>
+                `;
+                recentContainer.appendChild(row);
+            });
+        }
+
+        // Grades functions
+        function addGrade() {
+            const subjectName = document.getElementById('subject-name').value;
+            const credits = parseInt(document.getElementById('credits').value);
+            const grade = parseInt(document.getElementById('grade').value);
+            
+            if (!subjectName || !credits || grade === '') {
+                showToast("Please fill all fields!", "error");
+                return;
+            }
+            
+            // Add to grades array
+            studentData.grades.push({
+                subject: subjectName,
+                credits: credits,
+                grade: grade,
+                semester: "Current"
+            });
+            
+            // Clear form
+            document.getElementById('subject-name').value = '';
+            document.getElementById('credits').value = '';
+            document.getElementById('grade').value = '';
+            
+            saveData();
+            loadGradesData();
+            showToast("Grade added successfully!");
+        }
+
+        function deleteGrade(index) {
+            studentData.grades.splice(index, 1);
+            saveData();
+            loadGradesData();
+            showToast("Grade deleted successfully!");
+        }
+
+        function loadGradesData() {
+            // Calculate CGPA
+            let totalCredits = 0;
+            let totalGradePoints = 0;
+            
+            studentData.grades.forEach(grade => {
+                totalCredits += grade.credits;
+                totalGradePoints += grade.grade * grade.credits;
+            });
+            
+            const cgpa = totalCredits > 0 ? (totalGradePoints / totalCredits).toFixed(2) : 0;
+            
+            // Update display
+            document.getElementById('calculated-cgpa').textContent = cgpa;
+            document.getElementById('current-cgpa').textContent = cgpa;
+            document.getElementById('total-credits').textContent = totalCredits;
+            document.getElementById('total-grade-points').textContent = totalGradePoints;
+            
+            // Load grades table
+            const tableBody = document.getElementById('grades-table');
+            tableBody.innerHTML = '';
+            
+            studentData.grades.forEach((grade, index) => {
+                const row = document.createElement('tr');
+                const gradeClass = getGradeClass(grade.grade);
+                const gradeLetter = getGradeLetter(grade.grade);
+                
+                row.innerHTML = `
+                    <td>${grade.subject}</td>
+                    <td>${grade.credits}</td>
+                    <td><span class="grade-badge ${gradeClass}">${gradeLetter}</span></td>
+                    <td>${grade.grade * grade.credits}</td>
+                    <td>${grade.semester}</td>
+                    <td>
+                        <button onclick="deleteGrade(${index})" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Load semester performance
+            loadSemesterPerformance();
+        }
+
+        function loadSemesterPerformance() {
+            const semesters = {};
+            
+            studentData.grades.forEach(grade => {
+                if (!semesters[grade.semester]) {
+                    semesters[grade.semester] = { credits: 0, points: 0 };
+                }
+                semesters[grade.semester].credits += grade.credits;
+                semesters[grade.semester].points += grade.grade * grade.credits;
+            });
+            
+            const container = document.getElementById('semester-performance');
+            container.innerHTML = '';
+            
+            Object.keys(semesters).forEach(semester => {
+                const data = semesters[semester];
+                const sgpa = (data.points / data.credits).toFixed(2);
+                
+                const semesterDiv = document.createElement('div');
+                semesterDiv.className = 'subject-item';
+                semesterDiv.innerHTML = `
+                    <div class="subject-info">
+                        <h4>${semester}</h4>
+                        <p>${data.credits} credits</p>
+                    </div>
+                    <div class="subject-stats">
+                        <div class="subject-percentage good">SGPA: ${sgpa}</div>
+                    </div>
+                `;
+                container.appendChild(semesterDiv);
+            });
+        }
+
+        function getGradeLetter(grade) {
+            const gradeMap = {
+                10: 'A+', 9: 'A', 8: 'B+', 7: 'B', 6: 'C+', 5: 'C', 4: 'D', 0: 'F'
+            };
+            return gradeMap[grade] || 'N/A';
+        }
+
+        function getGradeClass(grade) {
+            if (grade >= 9) return 'grade-a-plus';
+            if (grade >= 8) return 'grade-a';
+            if (grade >= 7) return 'grade-b-plus';
+            return 'grade-b';
+        }
+
+        // Analytics functions
+        function loadAnalyticsData() {
+            // This would typically load charts and analytics
+            // For now, we'll just show static content
+            console.log('Analytics data loaded');
+        }
+
+        // Utility functions
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            
+            if (type === 'error') {
+                toast.classList.add('error');
+            } else {
+                toast.classList.remove('error');
+            }
+            
+            // Show toast
+            toast.classList.add('show');
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            
+            // Load initial data
+            loadAttendanceData();
+            loadGradesData();
+            
+            // Update profile display
+            const profile = studentData.profile;
+            document.getElementById('student-name').textContent = profile.name;
+            document.getElementById('full-name').value = profile.name;
+            document.getElementById('email').value = profile.email;
+            document.getElementById('phone').value = profile.phone;
+            document.getElementById('dob').value = profile.dob;
+            document.getElementById('address').value = profile.address;
+            
+            // Update avatar
+            const initials = profile.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            document.getElementById('profile-avatar').textContent = initials;
+            
+            showToast("Welcome to EduTrack AI! 🎓");
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96fdd98fa54a3d25',t:'MTc1NTMxNDk5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
